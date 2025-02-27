@@ -1,0 +1,47 @@
+{% extends 'items/base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-3">{% if form.instance.pk %}Редактировать{% else %}Создать{% endif %} вещь</h1>
+
+    <form method="post" class="mb-3">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            {{ form.title.label_tag }}
+            {{ form.title|add_class:"form-control border border-dark" }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.description.label_tag }}
+            {{ form.description|add_class:"form-control border border-dark" }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.location.label_tag }}
+            {{ form.location|add_class:"form-control border border-dark" }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.category.label_tag }}
+            {{ form.category|add_class:"form-select border border-dark" }}
+        </div>
+
+        {% if form.instance.pk %}
+        <div class="mb-3">
+            {{ form.status.label_tag }}
+            {{ form.status|add_class:"form-select border border-dark" }}
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+
+        {% if form.instance.pk %}
+            <a href="{% url 'item-delete' form.instance.pk %}" class="btn btn-danger">Удалить</a>
+        {% endif %}
+
+        <a href="{% url 'item-list' %}" class="btn btn-secondary">Назад</a>
+    </form>
+</div>
+{% endblock %}
