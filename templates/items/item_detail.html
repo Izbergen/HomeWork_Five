@@ -1,0 +1,21 @@
+{% extends 'items/base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+         <h1 class="card-title">{{ item.title }}</h1>
+    </div>
+    <div class="card-body">
+        <p class="card-title">Описания: {{ item.description }}</p>
+        <p class="card-text"><strong>Место в котором нашли:</strong> {{ item.location }}</p>
+        <p class="card-text"><strong>Текущий статус:</strong> {{ item.status }}</p>
+        <p class="card-text"> <strong>Категории :</strong> {{ item.category.name }}</p>
+    </div>
+    <div class="card-footer">
+         <a href="{% url 'item-update' item.pk %}" class="btn btn-secondary">Изменить</a>
+    <a href="{% url 'item-delete' item.pk %}" class="btn btn-danger">Удалить</a>
+    <a href="{% url 'item-list' %}" class="btn btn-primary">Вернутся в списку вещей</a>
+    </div>
+
+</div>
+{% endblock %}
