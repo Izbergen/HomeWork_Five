@@ -1,6 +1,7 @@
 {% extends 'items/base.html' %}
+{% load custom_filters %}
 
-{% block content %}
+{% block item %}
 <div class="card">
     <div class="card-header">
          <h1 class="card-title">{{ item.title }}</h1>
@@ -12,9 +13,33 @@
         <p class="card-text"> <strong>Категории :</strong> {{ item.category.name }}</p>
     </div>
     <div class="card-footer">
-         <a href="{% url 'item-update' item.pk %}" class="btn btn-secondary">Изменить</a>
-    <a href="{% url 'item-delete' item.pk %}" class="btn btn-danger">Удалить</a>
-    <a href="{% url 'item-list' %}" class="btn btn-primary">Вернутся в списку вещей</a>
+         {% if user.is_authenticated and item.author == user %}
+             <a href="{% url 'item-update' item.pk %}" class="btn btn-secondary">Изменить</a>
+             <a href="{% url 'item-delete' item.pk %}" class="btn btn-danger">Удалить</a>
+         {% endif %}
+        <a href="{% url 'item-list' %}" class="btn btn-primary">Вернутся в списку вещей</a>
+        <h3>Комментарий</h3>
+        <ul class="list-group">
+            {% for comment in comments %}
+                <li class="list-group-item">
+
+                     <small>От {{ comment.author.username }}</small>
+                    <p >{{ comment.text }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if user.is_authenticated %}
+            <h3>Добавить комментарий</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                {{ form.text|add_class:"form-control max-h- border border-dark" }}
+                </div>
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </form>
+        {% endif %}
+
     </div>
 
 </div>

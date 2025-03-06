@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<h2>Регистрироваться</h2>
+<form method="post">
+    {% csrf_token %}
+   <div class="mb-3">
+    {{ form.username.label_tag }}
+    {{ form.username|add_class:"form-control border border-dark" }}
+    </div>
+    <div class="mb-3">
+    {{ form.password1.label_tag }}
+    {{ form.password1|add_class:"form-control border border-dark" }}
+    </div>
+    <div class="mb-3">
+        {{ form.password2.label_tag }}
+        {{ form.password2|add_class:"form-control border border-dark" }}
+    </div>
+    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+</form>
+<p>У вас уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+{% endblock %}

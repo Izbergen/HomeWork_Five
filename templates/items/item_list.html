@@ -1,24 +1,20 @@
 {% extends 'items/base.html' %}
 
-{% block content %}
-<h1 class="mb-2">Lost and Found</h1>
+{% block item %}
 <a href="{% url 'item-create' %}" class="btn btn-primary mb-4">Сделать запись</a>
 <ul class="list-group">
     {% for item in items %}
-    <li class="list-group-item">
-    <div class="card">
-        <div class="card-body">
-        <h3 class="card-title">{{ item.title }}</h3>
-        <div class="card-text">Статус : {{ item.status }}</div>
-    </div>
-    <div class="card-footer">
-        <a class="text-black text-info-emphasis" href="{% url 'item-detail' item.pk %}">Посмотреть детали</a>
-
-    </div>
-    </div>
-
-
-    </li>
+        <li class="list-group-item list-group-item-action {% if item.status == 'LOST' %}active{% else %}disabled{% endif %}" aria-current="true">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">{{ item.title }}</h3>
+                    <div class="card-text">Статус : {{ item.status }}</div>
+                </div>
+                <div class="card-footer">
+                    <a class="text-black text-info-emphasis" href="{% url 'item-detail' item.pk %}" style="z-index: 1000; pointer-events: auto; opacity: 1;">Посмотреть детали</a>
+                </div>
+            </div>
+        </li>
     {% endfor %}
 </ul>
 {% endblock %}
