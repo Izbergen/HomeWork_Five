@@ -6,34 +6,30 @@ class ItemForm(forms.ModelForm):
         model = Item
         fields = ['title', 'description', 'location', 'category']
 
-    def clean_title(self):
-        title = self.cleaned_data.get('title')
-        if len(title) < 5:
-            raise forms.ValidationError("Заголовок должен содержать не менее 5 символов.")
-        return title
+    title = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Title Placeholder"}))
+    description = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Description Placeholder"}))
+    location = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Location Placeholder"}))
+    def clean(self):
+        cleaned_data = super().clean()
+        title = cleaned_data.get('title')
+        location = cleaned_data.get('location')
+        category = cleaned_data.get('category')
 
-    def clean_location(self):
-        location = self.cleaned_data.get('location')
-        if len(location) <= 0:
-            raise forms.ValidationError("Локация должна быть заполнена.")
-        return location
+        if title and len(title) < 5:
+            self.add_error('title', "Заголовок должен содержать не менее 5 символов.")
 
-    def clean_category(self):
-        category = self.cleaned_data.get('category')
+        if not location:
+            self.add_error('location', "Локация должна быть заполнена.")
+
         if not category:
-            raise forms.ValidationError("Категория должна быть выбрана.")
-        return category
+            self.add_error('category', "Категория должна быть выбрана.")
 
+        return cleaned_data
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
             self.fields['status'] = forms.ChoiceField(choices=Item._meta.get_field('status').choices)
-            self.fields['location'].required = True
-            self.fields['category'].required = True
-            self.fields['title'].required = True
-
-
 
 
 class CommentForm(forms.ModelForm):

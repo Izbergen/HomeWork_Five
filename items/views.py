@@ -1,10 +1,12 @@
+from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.views.generic import ListView, DetailView, CreateView , DeleteView , UpdateView
 from django.urls import reverse_lazy, reverse
 from .models import Item
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormMixin
-from .forms import CommentForm
+from .forms import CommentForm, ItemForm
+
 
 class ItemListView(ListView):
     model = Item
@@ -16,6 +18,9 @@ class ItemDetailView(FormMixin, DetailView):
     template_name = 'items/item_detail.html'
     context_object_name = 'item'
     form_class = CommentForm
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
 
     def get_success_url(self):
         return reverse('item-detail', kwargs={'pk': self.object.pk})
@@ -45,8 +50,8 @@ class ItemDetailView(FormMixin, DetailView):
 
 class ItemCreateView(LoginRequiredMixin, CreateView):
     model = Item
+    form_class = ItemForm
     template_name = 'items/item_form.html'
-    fields = ['title', 'description', 'location', 'category']
     success_url = reverse_lazy('item-list')
 
     def form_valid(self, form):
@@ -54,6 +59,11 @@ class ItemCreateView(LoginRequiredMixin, CreateView):
         form.instance.status = 'lost'
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        """Вызывается, если форма невалидна"""
+        messages.error(self.request, "Ошибка валидации! Проверьте данные.")
+        print("Форма невалидна:", form.errors)  # Логируем ошибки
+        return self.render_to_response(self.get_context_data(form=form))
 
 class ItemUpdateView(LoginRequiredMixin, UpdateView):
     model = Item

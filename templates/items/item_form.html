@@ -5,17 +5,20 @@
 <div class="container mt-4">
     <h1 class="mb-3">{% if form.instance.pk %}Редактировать{% else %}Создать{% endif %} вещь</h1>
 
+
     <form method="post" class="mb-3">
         {% csrf_token %}
 
         <div class="mb-3">
             {{ form.title.label_tag }}
             {{ form.title|add_class:"form-control border border-dark" }}
-             {% if form.title.errors %}
-            <div class="alert alert-danger">
-                {{ form.title.errors }}
-            </div>
-        {% endif %}
+            {% if form.title.errors %}
+                {% for error in form.title.errors %}
+                    <div class="alert alert-danger">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
 
         <div class="mb-3">
