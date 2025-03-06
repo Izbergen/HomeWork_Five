@@ -60,9 +60,7 @@ class ItemCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        """Вызывается, если форма невалидна"""
         messages.error(self.request, "Ошибка валидации! Проверьте данные.")
-        print("Форма невалидна:", form.errors)  # Логируем ошибки
         return self.render_to_response(self.get_context_data(form=form))
 
 class ItemUpdateView(LoginRequiredMixin, UpdateView):
