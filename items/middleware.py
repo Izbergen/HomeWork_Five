@@ -7,7 +7,7 @@ class ItemPermissionMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if request.path.startswith('/items/update/') or request.path.startswith('/items/delete/'):
+        if request.path.startswith('/update/') or request.path.startswith('/delete/'):
             item_id = request.resolver_match.kwargs.get('pk')
             if item_id:
                 item = Item.objects.get(id=item_id)
