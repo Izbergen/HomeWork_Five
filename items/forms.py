@@ -4,11 +4,13 @@ from .models import Item, Comment
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ['title', 'description', 'location', 'category']
+        fields = ['title', 'description', 'location', 'category', 'image']
 
     title = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Title Placeholder"}))
     description = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Description Placeholder"}))
     location = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Location Placeholder"}))
+    image = forms.FileField(widget=forms.ClearableFileInput(),required=False)
+
     def clean(self):
         cleaned_data = super().clean()
         title = cleaned_data.get('title')

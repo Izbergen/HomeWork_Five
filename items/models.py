@@ -15,8 +15,11 @@ class Item(models.Model):
     status = models.CharField(max_length=50, choices=[('lost', 'Lost'), ('found', 'Found')], default='lost')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='items', null=True)
+    image = models.ImageField(upload_to='items/', null=True, blank=True)
     def __str__(self):
         return self.title
+
+
 
 class Comment(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='comments')

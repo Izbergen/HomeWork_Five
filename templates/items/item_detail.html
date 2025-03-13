@@ -2,12 +2,16 @@
 {% load custom_filters %}
 
 {% block item %}
-<div class="card">
+<div class="card mb-4">
     <div class="card-header">
          <h1 class="card-title">{{ item.title }}</h1>
+        {% if item.image %}
+            <h3>Фотография:</h3>
+            <img src="{{ item.image.url }}" class="img-fluid rounded shadow-sm" alt="Item Image">
+        {% endif %}
     </div>
     <div class="card-body">
-        <p class="card-title">Описания: {{ item.description }}</p>
+        <p class="card-title"><strong>Описания:</strong> {{ item.description }}</p>
         <p class="card-text"><strong>Место в котором нашли:</strong> {{ item.location }}</p>
         <p class="card-text"><strong>Текущий статус:</strong> {{ item.status }}</p>
         <p class="card-text"> <strong>Категории :</strong> {{ item.category.name }}</p>
@@ -39,6 +43,16 @@
                 <button type="submit" class="btn btn-primary">Отправить</button>
             </form>
         {% endif %}
+    {% if viewed_items %}
+        <h2 class="mt-4">Недавно просмотренные:</h2>
+        <ul class="list-group">
+            {% for item in viewed_items %}
+                <li class="list-group-item">
+                    <a href="{% url 'item-detail' item.pk %}">{{ item.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
     </div>
 
