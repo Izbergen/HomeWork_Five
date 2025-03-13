@@ -1,47 +1,80 @@
 {% extends 'items/base.html' %}
 {% load custom_filters %}
 
-{% block content %}
+{% block item %}
 <div class="container mt-4">
     <h1 class="mb-3">{% if form.instance.pk %}Редактировать{% else %}Создать{% endif %} вещь</h1>
 
-    <form method="post" class="mb-3">
-        {% csrf_token %}
 
-        <div class="mb-3">
-            {{ form.title.label_tag }}
-            {{ form.title|add_class:"form-control border border-dark" }}
-        </div>
+    <form method="post" enctype="multipart/form-data" class="mb-3">
+    {% csrf_token %}
 
-        <div class="mb-3">
-            {{ form.description.label_tag }}
-            {{ form.description|add_class:"form-control border border-dark" }}
-        </div>
+    <div class="mb-3">
+        {{ form.title.label_tag }}
+        {{ form.title|add_class:"form-control border border-dark" }}
+        {% if form.title.errors %}
+            {% for error in form.title.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
 
-        <div class="mb-3">
-            {{ form.location.label_tag }}
-            {{ form.location|add_class:"form-control border border-dark" }}
-        </div>
+    <div class="mb-3">
+        {{ form.description.label_tag }}
+        {{ form.description|add_class:"form-control border border-dark" }}
+        {% if form.description.errors %}
+            <div class="alert alert-danger">{{ form.description.errors }}</div>
+        {% endif %}
+    </div>
 
-        <div class="mb-3">
-            {{ form.category.label_tag }}
-            {{ form.category|add_class:"form-select border border-dark" }}
-        </div>
+    <div class="mb-3">
+        {{ form.location.label_tag }}
+        {{ form.location|add_class:"form-control border border-dark" }}
+        {% if form.location.errors %}
+            <div class="alert alert-danger">{{ form.location.errors }}</div>
+        {% endif %}
+    </div>
 
-        {% if form.instance.pk %}
+    <div class="mb-3">
+        {{ form.category.label_tag }}
+        {{ form.category|add_class:"form-select border border-dark" }}
+        {% if form.category.errors %}
+            <div class="alert alert-danger">{{ form.category.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+    {{ form.image.label_tag }}
+    {{ form.image|add_class:"form-control border border-dark" }}
+    {% if form.image.errors %}
+        <div class="alert alert-danger">{{ form.image.errors }}</div>
+    {% endif %}
+</div>
+
+{% if form.instance.image %}
+    <div class="mb-3">
+        <label>Текущее изображение:</label>
+        <br>
+        <img src="{{ form.instance.image.url }}" alt="Загруженное изображение" class="img-fluid" style="max-width: 300px;">
+    </div>
+{% endif %}
+
+
+    {% if form.instance.pk %}
         <div class="mb-3">
             {{ form.status.label_tag }}
             {{ form.status|add_class:"form-select border border-dark" }}
         </div>
-        {% endif %}
+    {% endif %}
 
-        <button type="submit" class="btn btn-primary">Сохранить</button>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
 
-        {% if form.instance.pk %}
-            <a href="{% url 'item-delete' form.instance.pk %}" class="btn btn-danger">Удалить</a>
-        {% endif %}
+    {% if form.instance.pk %}
+        <a href="{% url 'item-delete' form.instance.pk %}" class="btn btn-danger">Удалить</a>
+    {% endif %}
 
-        <a href="{% url 'item-list' %}" class="btn btn-secondary">Назад</a>
-    </form>
+    <a href="{% url 'item-list' %}" class="btn btn-secondary">Назад</a>
+</form>
+
 </div>
 {% endblock %}

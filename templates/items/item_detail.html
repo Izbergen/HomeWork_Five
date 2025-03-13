@@ -1,20 +1,59 @@
 {% extends 'items/base.html' %}
+{% load custom_filters %}
 
-{% block content %}
-<div class="card">
+{% block item %}
+<div class="card mb-4">
     <div class="card-header">
          <h1 class="card-title">{{ item.title }}</h1>
+        {% if item.image %}
+            <h3>Фотография:</h3>
+            <img src="{{ item.image.url }}" class="img-fluid rounded shadow-sm" alt="Item Image">
+        {% endif %}
     </div>
     <div class="card-body">
-        <p class="card-title">Описания: {{ item.description }}</p>
+        <p class="card-title"><strong>Описания:</strong> {{ item.description }}</p>
         <p class="card-text"><strong>Место в котором нашли:</strong> {{ item.location }}</p>
         <p class="card-text"><strong>Текущий статус:</strong> {{ item.status }}</p>
         <p class="card-text"> <strong>Категории :</strong> {{ item.category.name }}</p>
     </div>
     <div class="card-footer">
-         <a href="{% url 'item-update' item.pk %}" class="btn btn-secondary">Изменить</a>
-    <a href="{% url 'item-delete' item.pk %}" class="btn btn-danger">Удалить</a>
-    <a href="{% url 'item-list' %}" class="btn btn-primary">Вернутся в списку вещей</a>
+         {% if user.is_authenticated and item.author == user %}
+             <a href="{% url 'item-update' item.pk %}" class="btn btn-secondary">Изменить</a>
+             <a href="{% url 'item-delete' item.pk %}" class="btn btn-danger">Удалить</a>
+         {% endif %}
+        <a href="{% url 'item-list' %}" class="btn btn-primary">Вернутся в списку вещей</a>
+        <h3>Комментарий</h3>
+        <ul class="list-group">
+            {% for comment in comments %}
+                <li class="list-group-item">
+
+                     <small>От {{ comment.author.username }}</small>
+                    <p >{{ comment.text }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if user.is_authenticated %}
+            <h3>Добавить комментарий</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                {{ form.text|add_class:"form-control max-h- border border-dark" }}
+                </div>
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </form>
+        {% endif %}
+    {% if viewed_items %}
+        <h2 class="mt-4">Недавно просмотренные:</h2>
+        <ul class="list-group">
+            {% for item in viewed_items %}
+                <li class="list-group-item">
+                    <a href="{% url 'item-detail' item.pk %}">{{ item.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     </div>
 
 </div>
